@@ -5,7 +5,7 @@
 #include<string>
 #include<vector>
 
-static enum {
+enum {
 	ESCAPE = 27,
 	ENTER = 13,
 	PROBEL = 32,
