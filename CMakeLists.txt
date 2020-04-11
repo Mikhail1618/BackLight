@@ -6,8 +6,8 @@
 #	if WINDOWS && MinGW: cmake ..												#
 #						 mingw32-make											#
 #																				#
-#	if UNIX && MinGW: cmake ..													#
-#					  make														#
+#	if GNU: cmake ..															#
+#			make																#
 #################################################################################
 
 
