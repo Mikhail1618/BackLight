@@ -101,6 +101,7 @@ add_custom_command(TARGET main POST_BUILD
 			$<$<CONFIG:release>:${CMAKE_BINARY_DIR}/Release>
 )
 
+
 	endif(MSVC)
 
 	if(MINGW)
