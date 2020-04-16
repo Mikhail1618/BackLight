@@ -27,10 +27,13 @@ target_include_directories(${PROJECT_NAME}
 						${PROJECT_BINARY_DIR}
 )
 
+include(CTest)
 
 if(NOT MSVC)
 
 target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS})
+
+add_test("test_1" ${CMAKE_BINARY_DIR}/${PROJECT_NAME})
 
 endif()
 
@@ -117,6 +120,7 @@ add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
 			$<$<CONFIG:release>:${CMAKE_BINARY_DIR}/Release>
 )
 
+add_test("test_1d" ${CMAKE_BINARY_DIR}/Debug/${PROJECT_NAME})
 
 	endif(MSVC)
 
@@ -144,8 +148,3 @@ add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
 
 
 endif(WIN32)
-####################################################################################
-
-include(CTest)
-
-add_test("test_1d" ${CMAKE_BINARY_DIR}/Debug/${PROJECT_NAME})
