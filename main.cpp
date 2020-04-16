@@ -4,6 +4,7 @@
 #include<iostream>
 #include<string>
 #include<vector>
+#include"config.h"
 
 enum {
 	ESCAPE = 27,
@@ -31,6 +32,12 @@ static void on_high_R_thresh_trackbar(int, void *);
 
 
 int main(int argc, char** argv) {
+
+	std::cout << "BackLight-"
+	<< PROJECT_VERSION_MAJOR << "."
+	<< PROJECT_VERSION_MINOR << "."
+	<< PROJECT_VERSION_PATCH
+	<< std::endl;
 
 	cv::VideoCapture cap(cv::CAP_ANY);
 
