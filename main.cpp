@@ -13,22 +13,26 @@ enum {
 	ENDLESSLY = 0
 };
 
-static const int MAX_VALUE = 256;
-static cv::RNG rng(12345);
+static const int MAX_VALUE = 255;
 
-static const std::string WINDOW_CAPTURE_NAME	= "Video Capture";
+static const std::string WINDOW_CAPTURE_NAME = "Video Capture";
 static const std::string WINDOW_DETECTION_NAME = "Object Detection";
-static const std::string WINDOW_SETTINGS_NAME  = "Settings";
+static const std::string WINDOW_SETTINGS_NAME = "Settings";
 
-static int B_min = 0, G_min = 0, R_min = 0;
-static int B_max = 256, G_max = 256, R_max = 256;
+static int  H_min = 0,
+			S_min = 0,
+			V_min = 0;
 
-static void on_low_B_thresh_trackbar(int, void *);
-static void on_high_B_thresh_trackbar(int, void *);
-static void on_low_G_thresh_trackbar(int, void *);
-static void on_high_G_thresh_trackbar(int, void *);
-static void on_low_R_thresh_trackbar(int, void *);
-static void on_high_R_thresh_trackbar(int, void *);
+static int	H_max = MAX_VALUE,
+			S_max = MAX_VALUE,
+			V_max = MAX_VALUE;
+
+static void on_low_H_thresh_trackbar(int, void *);
+static void on_high_H_thresh_trackbar(int, void *);
+static void on_low_S_thresh_trackbar(int, void *);
+static void on_high_S_thresh_trackbar(int, void *);
+static void on_low_V_thresh_trackbar(int, void *);
+static void on_high_V_thresh_trackbar(int, void *);
 
 
 int main(int argc, char** argv) {
@@ -55,85 +59,86 @@ int main(int argc, char** argv) {
 	cv::namedWindow(WINDOW_DETECTION_NAME);
 	cv::namedWindow(WINDOW_SETTINGS_NAME);
 
-	cv::createTrackbar("B min", WINDOW_SETTINGS_NAME, &B_min, MAX_VALUE, on_low_B_thresh_trackbar);
-	cv::createTrackbar("B max", WINDOW_SETTINGS_NAME, &B_max, MAX_VALUE, on_high_B_thresh_trackbar);
-	cv::createTrackbar("G min", WINDOW_SETTINGS_NAME, &G_min, MAX_VALUE, on_low_G_thresh_trackbar);
-	cv::createTrackbar("G max", WINDOW_SETTINGS_NAME, &G_max, MAX_VALUE, on_high_G_thresh_trackbar);
-	cv::createTrackbar("R min", WINDOW_SETTINGS_NAME, &R_min, MAX_VALUE, on_low_R_thresh_trackbar);
-	cv::createTrackbar("R max", WINDOW_SETTINGS_NAME, &R_max, MAX_VALUE, on_high_R_thresh_trackbar);
+	cv::createTrackbar("H min", WINDOW_SETTINGS_NAME, &H_min, MAX_VALUE, on_low_H_thresh_trackbar);
+	cv::createTrackbar("H max", WINDOW_SETTINGS_NAME, &H_max, MAX_VALUE, on_high_H_thresh_trackbar);
+	cv::createTrackbar("S min", WINDOW_SETTINGS_NAME, &S_min, MAX_VALUE, on_low_S_thresh_trackbar);
+	cv::createTrackbar("S max", WINDOW_SETTINGS_NAME, &S_max, MAX_VALUE, on_high_S_thresh_trackbar);
+	cv::createTrackbar("V min", WINDOW_SETTINGS_NAME, &V_min, MAX_VALUE, on_low_V_thresh_trackbar);
+	cv::createTrackbar("V max", WINDOW_SETTINGS_NAME, &V_max, MAX_VALUE, on_high_V_thresh_trackbar);
 
 
-	for (char ch = 0; ch != ESCAPE; ch = static_cast<char>(cv::waitKey(1))) {
+	for (char ch = 0; ch != ESCAPE; ch = static_cast<char>(cv::waitKey(30))) {
 
 		cap >> frame;
 
 		if (frame.empty()) break;
 
 
-		cv::inRange(frame, cv::Scalar(B_min, G_min, R_min), cv::Scalar(B_max, G_max, R_max), frame_threshold);
+		cv::cvtColor(frame, frame_temp, cv::COLOR_BGR2HSV_FULL);
+
+		cv::inRange(frame_temp, cv::Scalar(H_min, S_min, V_min), cv::Scalar(H_max, S_max, V_max), frame_threshold);
 
 		cv::findContours(frame_threshold, contours, hierarchy, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
 
+		cv::Scalar color = cv::Scalar(0x336699);
 
-		for (size_t i = 0; i < contours.size(); i++){
+		for (size_t i = 0; i < contours.size(); i++) {			
 
-			cv::Scalar color = cv::Scalar(255, 107, 0);
-
-			drawContours(frame, contours, static_cast<int>(i), color, 3, cv::LINE_8, hierarchy);
+			drawContours(frame, contours, static_cast<int>(i), color, 2, cv::LINE_8, hierarchy);
 		}
-		
-		
+
+
 		cv::imshow(WINDOW_CAPTURE_NAME, frame);
 		cv::imshow(WINDOW_DETECTION_NAME, frame_threshold);
 	}
-	
+
 	return 0;
 }
 
 
-static void on_low_B_thresh_trackbar(int, void *){
+static void on_low_H_thresh_trackbar(int, void *) {
 
-	B_min = cv::min(B_max - 1, B_min);
+	H_min = cv::min(H_max - 1, H_min);
 
-	cv::setTrackbarPos("B min", WINDOW_SETTINGS_NAME, B_min);
+	cv::setTrackbarPos("H min", WINDOW_SETTINGS_NAME, H_min);
 }
 
 
-static void on_high_B_thresh_trackbar(int, void *){
+static void on_high_H_thresh_trackbar(int, void *) {
 
-	B_max = cv::max(B_max, B_min + 1);
+	H_max = cv::max(H_max, H_min + 1);
 
-	cv::setTrackbarPos("B max", WINDOW_SETTINGS_NAME, B_max);
+	cv::setTrackbarPos("H max", WINDOW_SETTINGS_NAME, H_max);
 }
 
 
-static void on_low_G_thresh_trackbar(int, void *){
+static void on_low_S_thresh_trackbar(int, void *) {
 
-	G_min = cv::min(G_max - 1, G_min);
+	S_min = cv::min(S_max - 1, S_min);
 
-	cv::setTrackbarPos("G min", WINDOW_SETTINGS_NAME, G_min);
+	cv::setTrackbarPos("S min", WINDOW_SETTINGS_NAME, S_min);
 }
 
 
-static void on_high_G_thresh_trackbar(int, void *){
+static void on_high_S_thresh_trackbar(int, void *) {
 
-	G_max = cv::max(G_max, G_min + 1);
+	S_max = cv::max(S_max, S_min + 1);
 
-	cv::setTrackbarPos("G max", WINDOW_SETTINGS_NAME, G_max);
+	cv::setTrackbarPos("S max", WINDOW_SETTINGS_NAME, S_max);
 }
 
 
-static void on_low_R_thresh_trackbar(int, void *){
+static void on_low_V_thresh_trackbar(int, void *) {
 
-	R_min = cv::min(R_max - 1, R_min);
+	V_min = cv::min(V_max - 1, V_min);
 
-	cv::setTrackbarPos("R min", WINDOW_SETTINGS_NAME, R_min);
+	cv::setTrackbarPos("V min", WINDOW_SETTINGS_NAME, V_min);
 }
 
 
-static void on_high_R_thresh_trackbar(int, void *){
+static void on_high_V_thresh_trackbar(int, void *) {
 
-	R_max = cv::max(R_max, R_min + 1);
+	V_max = cv::max(V_max, V_min + 1);
 
-	cv::setTrackbarPos("R max", WINDOW_SETTINGS_NAME, R_max);
+	cv::setTrackbarPos("V max", WINDOW_SETTINGS_NAME, V_max);
 }
