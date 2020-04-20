@@ -1,13 +1,17 @@
 
 #################################################################################
-#   if WINDOWS && MSVC:	cmake -A x64 ..											#
-#						cmake --build . --config Release						#
-#																				#
-#	if WINDOWS && MinGW: cmake ..												#
-#						 mingw32-make											#
-#																				#
-#	if GNU: cmake ..															#
-#			make																#
+#
+#   if WINDOWS && MSVC:
+#			cmake -A x64 ..
+#			cmake --build .
+#			ctest
+#			cmake --build . --config Release						
+#								
+#												
+#	if GNU || WINDOWS && MinGW: 
+#			cmake ..												
+#			cmake --build .											
+#																
 #################################################################################
 
 
