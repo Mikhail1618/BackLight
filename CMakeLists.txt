@@ -19,6 +19,12 @@ configure_file(config.h.in config.h)
 
 find_package(OpenCV REQUIRED)
 
+if(NOT MSVC)
+
+	set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
+endif()
+
 add_executable(${PROJECT_NAME} main.cpp)
 
 target_include_directories(${PROJECT_NAME}
@@ -31,9 +37,9 @@ include(CTest)
 
 if(NOT MSVC)
 
-target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS})
+	target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS})
 
-add_test("test_1" ${CMAKE_BINARY_DIR}/${PROJECT_NAME})
+	add_test("test_1" ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${PROJECT_NAME})
 
 endif()
 
@@ -129,19 +135,19 @@ add_test("test_1d" ${CMAKE_BINARY_DIR}/Debug/${PROJECT_NAME})
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
 
 	COMMAND	${CMAKE_COMMAND} -E copy_if_different
-		$ENV{OpenCV_DIR}/x64/mingw/bin/libopencv_imgproc420.dll	${CMAKE_BINARY_DIR}
+		$ENV{OpenCV_DIR}/x64/mingw/bin/libopencv_imgproc420.dll	${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
 	
 	COMMAND	${CMAKE_COMMAND} -E copy_if_different
-		$ENV{OpenCV_DIR}/x64/mingw/bin/libopencv_videoio420.dll	${CMAKE_BINARY_DIR}
+		$ENV{OpenCV_DIR}/x64/mingw/bin/libopencv_videoio420.dll	${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
 		
 	COMMAND	${CMAKE_COMMAND} -E copy_if_different
-		$ENV{OpenCV_DIR}/x64/mingw/bin/libopencv_highgui420.dll	${CMAKE_BINARY_DIR}
+		$ENV{OpenCV_DIR}/x64/mingw/bin/libopencv_highgui420.dll	${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
 
 	COMMAND	${CMAKE_COMMAND} -E copy_if_different
-		$ENV{OpenCV_DIR}/x64/mingw/bin/libopencv_core420.dll	${CMAKE_BINARY_DIR}
+		$ENV{OpenCV_DIR}/x64/mingw/bin/libopencv_core420.dll	${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
 
 	COMMAND	${CMAKE_COMMAND} -E copy_if_different
-		$ENV{OpenCV_DIR}/x64/mingw/bin/libopencv_imgcodecs420.dll ${CMAKE_BINARY_DIR}
+		$ENV{OpenCV_DIR}/x64/mingw/bin/libopencv_imgcodecs420.dll ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
 )
 
 	endif(MINGW)
