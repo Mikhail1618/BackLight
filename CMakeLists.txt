@@ -17,7 +17,9 @@
 
 cmake_minimum_required(VERSION 3.12)
 
-project(backlight VERSION 2.0.0)
+project(backlight VERSION 2.0.1)
+
+set(SOURCES main.cpp config.h.in)
 
 configure_file(config.h.in config.h)
 
@@ -29,7 +31,7 @@ if(NOT MSVC)
 
 endif()
 
-add_executable(${PROJECT_NAME} main.cpp)
+add_executable(${PROJECT_NAME} ${SOURCES})
 
 target_include_directories(${PROJECT_NAME}
 						PUBLIC 
