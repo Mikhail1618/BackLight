@@ -17,7 +17,7 @@ static const int MAX_VALUE = 255;
 
 static const std::string WINDOW_CAPTURE_NAME = "Video Capture";
 static const std::string WINDOW_DETECTION_NAME = "Object Detection";
-static const std::string WINDOW_SETTINGS_NAME = "Settings";
+static const std::string WINDOW_SETTINGS_NAME = "Settings HSV_FULL";
 
 static int  H_min = 0,
 			S_min = 0,
@@ -55,9 +55,16 @@ int main(int argc, char** argv) {
 	std::vector<cv::Vec4i> hierarchy;
 
 
-	cv::namedWindow(WINDOW_CAPTURE_NAME);
-	cv::namedWindow(WINDOW_DETECTION_NAME);
-	cv::namedWindow(WINDOW_SETTINGS_NAME);
+	cv::namedWindow(WINDOW_CAPTURE_NAME, cv::WINDOW_KEEPRATIO);
+	cv::moveWindow(WINDOW_CAPTURE_NAME, 0, 0);
+
+	cv::namedWindow(WINDOW_SETTINGS_NAME, cv::WINDOW_GUI_NORMAL);
+	cv::moveWindow(WINDOW_SETTINGS_NAME, 400, 500);
+	cv::resizeWindow(WINDOW_SETTINGS_NAME, cv::Size(500, 300));
+
+	cv::namedWindow(WINDOW_DETECTION_NAME, cv::WINDOW_KEEPRATIO);
+	cv::moveWindow(WINDOW_DETECTION_NAME, 800, 0);
+
 
 	cv::createTrackbar("H min", WINDOW_SETTINGS_NAME, &H_min, MAX_VALUE, on_low_H_thresh_trackbar);
 	cv::createTrackbar("H max", WINDOW_SETTINGS_NAME, &H_max, MAX_VALUE, on_high_H_thresh_trackbar);
@@ -67,7 +74,7 @@ int main(int argc, char** argv) {
 	cv::createTrackbar("V max", WINDOW_SETTINGS_NAME, &V_max, MAX_VALUE, on_high_V_thresh_trackbar);
 
 
-	for (char ch = 0; ch != ESCAPE; ch = static_cast<char>(cv::waitKey(30))) {
+	for (char ch = 0; ch != ESCAPE; ch = static_cast<char>(cv::waitKey(1))) {
 
 		cap >> frame;
 
